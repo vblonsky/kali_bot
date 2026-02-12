@@ -44,33 +44,32 @@ EOF
     chmod 600 "$ENV_FILE"
 fi
 
-# Инициализация базы данных
+echo "== Инициализация базы данных =="
+
 python3 - <<EOF
 import asyncio
-from db import init_db
 import sqlite3
 import os
+from bot.db import init_db
+from bot.config import DB_PATH
+from dotenv import load_dotenv
 
-DB_FILE = os.path.join("$PROJECT_DIR", "bot.db")
+# Загружаем .env
+load_dotenv(os.path.join("$PROJECT_DIR", ".env"))
+
+ADMIN_ID = os.getenv("ADMIN_ID")
+
 asyncio.run(init_db())
 
-# Добавляем первого администратора, если указано
-env_file = os.path.join("$PROJECT_DIR", ".env")
-ADMIN_ID = None
-with open(env_file) as f:
-    for line in f:
-        if line.startswith("ADMIN_ID="):
-            ADMIN_ID = line.strip().split("=")[1]
-
-conn = sqlite3.connect("$DB_FILE")
-c = conn.cursor()
 if ADMIN_ID:
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
     c.execute("INSERT OR IGNORE INTO admins VALUES (?)", (ADMIN_ID,))
-conn.commit()
-conn.close()
+    conn.commit()
+    conn.close()
+    print("Первый администратор добавлен.")
 EOF
 
 echo "== Запуск бота =="
-cd bot
-python3 bot.py
+python3 bot/bot.py
 

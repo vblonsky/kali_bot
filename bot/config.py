@@ -1,7 +1,15 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+# Базовая директория проекта (на уровень выше папки bot)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Пути к файлам в корне проекта
+ENV_PATH = os.path.join(BASE_DIR, ".env")
+DB_PATH = os.path.join(BASE_DIR, "bot.db")
+
+# Загружаем .env
+load_dotenv(ENV_PATH)
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 SERVER_IP = os.getenv("SERVER_IP")
