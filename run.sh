@@ -2,7 +2,7 @@
 set -e
 
 PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
-VENV_DIR="$PROJECT_DIR/venv"
+VENV_DIR="$PROJECT_DIR/bot/venv"
 ENV_FILE="$PROJECT_DIR/.env"
 DB_FILE="$PROJECT_DIR/bot.db"
 
@@ -71,5 +71,6 @@ conn.close()
 EOF
 
 echo "== Запуск бота =="
+cd bot
 python3 bot.py
 
