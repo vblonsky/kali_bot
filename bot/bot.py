@@ -39,7 +39,7 @@ async def access_server(message: Message, state: FSMContext):
             exists = await cur.fetchone()
 
     if not exists:
-        await message.answer("Ваше имя?")
+        await message.answer("Ваше имя (Как к Вам обращаться)?")
         await state.set_state(Quest.name)
     else:
         await assign_login(message)
